@@ -1,0 +1,189 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-inter: "Inter", sans-serif;
+}
+
+:root {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Global Poppins for main UI */
+body, h1, h2, h3, h4, h5, h6, .font-black, .font-bold {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+:root {
+  --bg-primary: radial-gradient(circle at 50% 50%, #FFFFFF 0%, #FAFAFA 50%, #F1F5F9 100%);
+  --text-primary: #0f172a;
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.45);
+  --sidebar-bg: rgba(255, 255, 255, 0.8);
+}
+
+.dark {
+  --bg-primary: radial-gradient(circle at 50% 50%, #0f172a 0%, #020617 100%);
+  --text-primary: #f8fafc;
+  --glass-bg: rgba(15, 23, 42, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --sidebar-bg: rgba(2, 6, 23, 0.8);
+}
+
+/* Inter for sub-texts and dashboard data for better readability */
+p, span, label, input, select, textarea, small, .italic {
+  font-family: 'Inter', sans-serif !important;
+}
+
+/* Specific subtext classes */
+.text-slate-500, .text-slate-400, .text-slate-300 {
+  font-family: 'Inter', sans-serif !important;
+}
+
+/* Improve readability only inside light/white surfaces */
+main .bg-white .text-slate-500,
+main .bg-white .text-slate-400,
+main .bg-white .text-slate-300,
+main .bg-white .text-gray-500,
+main .bg-white .text-gray-400,
+main .bg-slate-50 .text-slate-500,
+main .bg-slate-50 .text-slate-400,
+main .bg-slate-50 .text-slate-300,
+main .bg-slate-50 .text-gray-500,
+main .bg-slate-50 .text-gray-400 {
+  color: #0f172a !important;
+}
+
+/* Hide scrollbars globally (keep scrolling enabled) */
+html,
+body,
+#root {
+  -ms-overflow-style: none; /* IE/Edge legacy */
+  scrollbar-width: none; /* Firefox */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+#root::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+@keyframes enter {
+  from { transform: scale(0.9) translateY(-20px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+@keyframes leave {
+  from { transform: scale(1) translateY(0); opacity: 1; }
+  to { transform: scale(0.9) translateY(-20px); opacity: 0; }
+}
+.animate-enter { animation: enter 0.2s ease-out; }
+.animate-leave { animation: leave 0.15s ease-in forwards; }
+
+/* Hide scrollbars for all scroll containers */
+* {
+  -ms-overflow-style: none; /* IE/Edge legacy */
+  scrollbar-width: none; /* Firefox */
+}
+
+*::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  position: relative;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+  font-family: 'Poppins', sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* cinematic teal streak - left */
+body::before {
+  content: "";
+  position: fixed;
+  width: 120vw;
+  height: 120vh;
+  background: radial-gradient(circle at 0% 0%, rgba(20,184,166,0.1) 0%, transparent 80%);
+  top: -20%;
+  left: -20%;
+  filter: blur(140px);
+  z-index: -1;
+  pointer-events: none;
+  animation: float-teal 18s infinite alternate ease-in-out;
+}
+
+/* cinematic yellow streak - right */
+body::after {
+  content: "";
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at 100% 100%, rgba(245,158,11,0.08) 0%, transparent 80%);
+  bottom: -20%;
+  right: -20%;
+  filter: blur(140px);
+  z-index: -1;
+  pointer-events: none;
+  animation: float-yellow 22s infinite alternate ease-in-out;
+}
+
+@keyframes float-teal {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  100% { transform: translate(150px, 80px) rotate(5deg); }
+}
+
+@keyframes float-yellow {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  100% { transform: translate(-150px, -80px) rotate(-5deg); }
+}
+
+/* Glassmorphism utility - Matches Reference */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(50px) saturate(200%);
+  -webkit-backdrop-filter: blur(50px) saturate(200%);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.04);
+}
+
+.dark .bg-white {
+  background-color: #1e293b !important;
+}
+
+.dark .bg-slate-50, .dark .bg-\[\#F1F5F9\] {
+  background-color: #0f172a !important;
+}
+
+.dark .text-slate-900, .dark .text-slate-800 {
+  color: #f8fafc !important;
+}
+
+.dark .text-slate-600, .dark .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+.dark .border-slate-200, .dark .border-slate-100 {
+  border-color: #334155 !important;
+}
+
+/* Clean, modern typography */
+.italic-header {
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+/* Hidden scrollbars for clean UI */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+*::-webkit-scrollbar {
+  display: none;
+}
