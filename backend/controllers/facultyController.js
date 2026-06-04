@@ -184,15 +184,25 @@ const markRead = async (req, res) => {
 const updateProfile = async (req, res) => {
     try {
         const updates = {};
-        if (req.body.phone_number) updates.phone_number = req.body.phone_number;
-        if (req.body.password) {
+        const { phone_number, qualification, experience, subjects, address, bio, password } = req.body;
+
+        if (phone_number) updates.phone_number = phone_number;
+        if (qualification) updates.qualification = qualification;
+        if (experience) updates.experience = experience;
+        if (subjects) updates.subjects = typeof subjects === 'string' ? subjects.split(',').map(s => s.trim()) : subjects;
+        if (address) updates.address = address;
+        if (bio) updates.bio = bio;
+
+        if (password) {
             const salt = await bcrypt.genSalt(10);
-            updates.password = await bcrypt.hash(req.body.password, salt);
+            updates.password = await bcrypt.hash(password, salt);
         }
         if (req.file) updates.profile_image = req.file.path;
+
         if (!Object.keys(updates).length) return res.status(400).json({ success: false, message: 'No updates provided' });
-        await User.findByIdAndUpdate(req.user.id, updates);
-        res.status(200).json({ success: true, message: 'Profile updated' });
+
+        const updated = await User.findByIdAndUpdate(req.user.id, updates, { new: true }).select('-password');
+        res.status(200).json({ success: true, message: 'Profile updated', data: updated });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }

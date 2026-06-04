@@ -194,7 +194,7 @@ const getFacultyDirectory = async (req, res) => {
         if (sortBy === 'newest') sortOption = { createdAt: -1 };
         else if (sortBy === 'oldest') sortOption = { createdAt: 1 };
 
-        const faculties = await User.find({ role: 'faculty' }).sort(sortOption).select('name email phone_number status place createdAt');
+        const faculties = await User.find({ role: 'faculty' }).sort(sortOption).select('-password');
 
         const enriched = await Promise.all(faculties.map(async (f) => {
             const studentCount = await Student.countDocuments({ faculty_id: f._id, status: 'active' });
@@ -263,8 +263,12 @@ const saveExamPlan = async (req, res) => {
 // @desc    Edit faculty
 const editFaculty = async (req, res) => {
     try {
-        const { name, email, phone_number, place } = req.body;
-        const user = await User.findByIdAndUpdate(req.params.id, { name, email, phone_number, place }, { new: true });
+        const { name, email, phone_number, place, faculty_id, hourly_rate } = req.body;
+        const updates = { name, email, phone_number, place };
+        if (faculty_id !== undefined) updates.faculty_id = faculty_id;
+        if (hourly_rate !== undefined) updates.hourly_rate = Number(hourly_rate);
+
+        const user = await User.findByIdAndUpdate(req.params.id, updates, { new: true });
         if (!user) return res.status(404).json({ success: false, message: 'Faculty not found' });
         await AdminNotification.create({ message: `Academic Head (${req.user.name}) edited faculty: ${user.name}` });
         res.status(200).json({ success: true, message: 'Faculty updated.' });

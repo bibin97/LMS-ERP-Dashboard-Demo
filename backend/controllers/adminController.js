@@ -255,12 +255,28 @@ const getStaffMembers = async (req, res) => {
 
 const getAllFacultiesForAdmin = async (req, res) => {
     try {
-        const faculties = await User.find({ role: 'faculty' }).lean();
+        const faculties = await User.find({ role: 'faculty' })
+            .select('-password')
+            .lean();
         const data = await Promise.all(faculties.map(async (f) => {
             const studentsUnder = await Student.countDocuments({ faculty_id: f._id, status: 'active' });
-            return { ...f, studentsUnder };
+            const assignedStudents = await Student.find({ faculty_id: f._id, status: 'active' }).select('name grade subject').lean();
+            return { ...f, studentsUnder, assignedStudents };
         }));
         res.status(200).json({ success: true, data });
+    } catch (error) { res.status(500).json({ success: false, message: error.message }); }
+};
+
+// @desc    Admin updates faculty_id and hourly_rate
+const updateFacultyById = async (req, res) => {
+    try {
+        const { faculty_id, hourly_rate } = req.body;
+        const updates = {};
+        if (faculty_id !== undefined) updates.faculty_id = faculty_id;
+        if (hourly_rate !== undefined) updates.hourly_rate = Number(hourly_rate);
+        const updated = await User.findByIdAndUpdate(req.params.id, updates, { new: true }).select('-password');
+        if (!updated) return res.status(404).json({ success: false, message: 'Faculty not found' });
+        res.status(200).json({ success: true, message: 'Faculty updated', data: updated });
     } catch (error) { res.status(500).json({ success: false, message: error.message }); }
 };
 
@@ -306,6 +322,6 @@ module.exports = {
     deleteNotification, clearAllNotifications, updateStudentForAdmin,
     updateUserForAdmin, getAllStudentsForAdmin, getSubAdmins, createSubAdmin,
     updateSubAdmin, deleteSubAdmin,
-    getAllMentorsForAdmin, getStaffMembers, getAllFacultiesForAdmin,
+    getAllMentorsForAdmin, getStaffMembers, getAllFacultiesForAdmin, updateFacultyById,
     getExamAnalytics, getMentorDistribution, getTaskAnalytics, getLiveMonitoring
 };

@@ -29,7 +29,8 @@ const {
     getExamAnalytics,
     getMentorDistribution,
     getTaskAnalytics,
-    getLiveMonitoring
+    getLiveMonitoring,
+    updateFacultyById
 } = require('../controllers/adminController');
 const { getDailyHours } = require('../controllers/mentorController');
 const { requireAuth } = require('../middleware/authMiddleware');
@@ -49,6 +50,7 @@ router.get('/users', requireRole('super_admin'), getUsers);
 router.get('/students', requireRole('super_admin'), getAllStudentsForAdmin);
 router.get('/mentors', requireRole('super_admin'), getAllMentorsForAdmin);
 router.get('/faculties', requireRole('super_admin'), getAllFacultiesForAdmin);
+router.put('/faculty/:id/update', requireRole('super_admin'), updateFacultyById);
 router.get('/staff', requireRole('super_admin'), getStaffMembers);
 router.get('/users/:id', requireRole('super_admin'), getUserById);
 router.get('/student-logs', requireRole('super_admin'), getAllStudentLogs);

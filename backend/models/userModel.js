@@ -17,7 +17,15 @@ const userSchema = new mongoose.Schema({
     profile_image: { type: String },
     place: { type: String },
     permissions: mongoose.Schema.Types.Mixed,
-    registeredBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+    registeredBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    // Faculty-specific fields
+    faculty_id: { type: String, sparse: true },
+    hourly_rate: { type: Number, default: 0 },
+    qualification: { type: String },
+    experience: { type: String },
+    subjects: [{ type: String }],
+    address: { type: String },
+    bio: { type: String }
 }, { timestamps: true });
 
 // Password hashing middleware
