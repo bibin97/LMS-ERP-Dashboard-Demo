@@ -305,7 +305,6 @@ const FacultySessions = () => {
                     </div>
                 </div>
             )}
-        </div>
 
             {/* Attendance Modal */}
             {isAttendanceModalOpen && selectedSession && (

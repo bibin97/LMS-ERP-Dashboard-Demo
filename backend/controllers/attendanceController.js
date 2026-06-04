@@ -25,18 +25,21 @@ const getMyAttendanceStats = async (req, res) => {
     try {
         const student_id = req.user.id;
         const records = await Attendance.find({ student_id });
-        
         const total = records.length;
         const present = records.filter(r => r.status === 'Present').length;
         const percentage = total > 0 ? ((present / total) * 100).toFixed(2) : 0;
+        res.status(200).json({ success: true, data: { total_sessions: total, present_count: present, attendance_percentage: percentage } });
+    } catch (error) { res.status(500).json({ success: false, message: error.message }); }
+};
 
-        res.status(200).json({
-            success: true,
-            data: { total_sessions: total, present_count: present, attendance_percentage: percentage }
-        });
+// @desc    Get attendance for a specific session
+const getSessionAttendance = async (req, res) => {
+    try {
+        const records = await Attendance.find({ session_id: req.params.id }).populate('student_id', 'name roll_number');
+        res.status(200).json({ success: true, data: records });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
 };
 
-module.exports = { markAttendance, getMyAttendanceStats };
+module.exports = { markAttendance, getSessionAttendance, getMyAttendanceStats };

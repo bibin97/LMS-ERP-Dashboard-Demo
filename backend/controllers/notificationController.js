@@ -33,4 +33,18 @@ const markRead = async (req, res) => {
     }
 };
 
-module.exports = { getNotifications, markRead };
+// @desc    Delete notification
+const deleteNotification = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { role } = req.user;
+        const Model = (role === 'super_admin' || role === 'admin') ? AdminNotification : Notification;
+        
+        await Model.findByIdAndDelete(id);
+        res.status(200).json({ success: true, message: "Deleted" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+module.exports = { getNotifications, markRead, deleteNotification };
